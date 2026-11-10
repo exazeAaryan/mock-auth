@@ -1,0 +1,216 @@
+
+/* Main split-screen layout */
+.login-page {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #ffffff;
+}
+
+/* Left image section */
+.login-image {
+    width: 50%;
+    height: 100vh;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.login-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Right login section */
+.login-form-section {
+    width: 50%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+}
+
+/* Login card */
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.login-card h1 {
+    font-size: 30px;
+    color: #991b1b;
+    margin-bottom: 8px;
+}
+
+.login-card > p {
+    color: #737373;
+    font-size: 14px;
+    margin-bottom: 28px;
+}
+
+/* Form layout */
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.login-card label {
+    display: block;
+    margin-bottom: 7px;
+    color: #404040;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Input fields */
+.login-card input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.login-card input:focus {
+    border-color: #dc2626;
+}
+
+.form-group input.ng-invalid.ng-touched {
+    border-color: #dc2626;
+}
+
+/* Validation messages */
+.error {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+.asterik {
+    color: #dc2626;
+}
+
+/* Password input wrapper */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+    display: block;
+}
+
+.password-wrapper input {
+    display: block;
+    width: 100%;
+    padding: 13px 65px 13px 14px;
+    box-sizing: border-box;
+}
+
+/* Show/Hide button */
+.login-card .password-wrapper .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 5px;
+    background: transparent;
+    color: #dc2626;
+    border: none;
+    border-radius: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: normal;
+    cursor: pointer;
+}
+
+.login-card .password-wrapper .password-toggle:hover {
+    background: transparent;
+    color: #991b1b;
+}
+
+/* Login submit button */
+.login-card button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background-color: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.login-card button[type="submit"]:hover {
+    background-color: #b91c1c;
+}
+
+.login-card button[type="submit"]:disabled {
+    background-color: #fca5a5;
+    cursor: not-allowed;
+}
+
+/* Forgot password */
+.login-card .forgot-password {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Links */
+.login-card a {
+    color: #dc2626;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.login-card a:hover {
+    text-decoration: underline;
+}
+
+/* Register link */
+.login-card .register-link {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: #737373;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .login-image {
+        display: none;
+    }
+
+    .login-form-section {
+        width: 100%;
+        padding: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 10px;
+    }
+}

@@ -1,0 +1,94 @@
+<div class = 'login-page'>
+
+    <div class = 'login-image'>
+        <img src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG0ZhoeO6lYPsXHoqhXTsdhHBWSHoxaVtnsIhwDtiUYWyEw5LHo0Xj6QgS&s=10' 
+        alt = 'image' class = 'left-image'>
+    </div>
+
+<div class="login-form-section">
+    <div class="login-card">
+
+        <a href = '#'><img src = 'https://redefine.co.za/assets/images/logo.svg'></a>
+        <h1>Hello and Welcome!</h1>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email Address <span class = 'asterik'>*</span></label>
+
+                <input
+                    type="email"
+                    id="email"
+                    formControlName="email"
+                    placeholder="Enter your email"
+                >
+
+                @if (loginForm.controls.email.touched &&
+                     loginForm.controls.email.hasError('required')) {
+                    <small class="error">Email is required</small>
+                }
+
+                @if (loginForm.controls.email.touched &&
+                     loginForm.controls.email.hasError('email')) {
+                    <small class="error">Enter a valid email address</small>
+                }
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password <span class = 'asterik'>*</span></label>
+
+                <div class = 'password-wrapper'>
+                <input
+                    [type] = "showPassword ? 'text' : 'password'"
+                    id="password"
+                    formControlName="password"
+                    placeholder="Enter your password"
+                >
+
+                <button type = 'button' class = 'password-toggle' (click)="showPassword = !showPassword">
+                    {{ showPassword ? 'Hide' : 'Show'}}
+                </button>
+                    
+                </div>
+                @if (loginForm.controls.password.touched &&
+                     loginForm.controls.password.hasError('required')) {
+                    <small class="error">Password is required.</small>
+                }
+
+                @if (loginForm.controls.password.touched &&
+                    loginForm.controls.password.hasError('pattern')){
+                        <small class = "error">
+                            Password should contain a capital letter, a small letter, a symbol and a number.<br>
+                        </small>
+                    }
+
+                @if (loginForm.controls.password.touched &&
+                     loginForm.controls.password.hasError('minlength')) {
+                    <small class="error">
+                        Password must be at least 6 characters.
+                    </small>
+                }
+            
+        </div>
+            <!-- Forgot Password -->
+            <div class="forgot-password">
+                <a routerLink="/forgot-password">Forgot Password?</a>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" [disabled]="loginForm.invalid">
+                Login
+            </button>
+
+        </form>
+
+        <p class="register-link">
+            Don't have an account?
+            <a routerLink="/register">Create Account</a>
+        </p>
+
+    </div>
+</div>
+</div>
