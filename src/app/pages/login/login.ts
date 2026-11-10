@@ -3,6 +3,7 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Validator } from '@angular/forms';
+import { Auth } from '../../services/auth';
 @Component({
   imports: [ReactiveFormsModule],
   selector: 'app-login',
@@ -24,6 +25,9 @@ export class Login {
   ]),
   })
 
+  constructor(private auth : Auth){}
+
+  loginError = '';
   onSubmit()
   {
     if(this.loginForm.invalid)
@@ -31,7 +35,22 @@ export class Login {
       return;
     }
 
-    console.log('Login Details:', this.loginForm.value);
+    const email = this.loginForm.value.email ?? '';
+    const password = this.loginForm.value.password ?? '';
+
+    this.loginError = '';
+
+    const isAuthenticated = this.auth.login(email , password);
+
+    if(isAuthenticated)
+    {
+      this.loginError = 'Login Successful'
+    }
+    else
+    {
+      this.loginError = 'Invalid email or password'
+    }
+    
     
   }
 
