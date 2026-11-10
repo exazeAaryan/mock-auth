@@ -1,14 +1,14 @@
 <div class = 'login-page'>
 
     <div class = 'login-image'>
-        <img src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG0ZhoeO6lYPsXHoqhXTsdhHBWSHoxaVtnsIhwDtiUYWyEw5LHo0Xj6QgS&s=10' 
+        <img src = 'http://localhost:4200/assets/images/user-vector.svg' 
         alt = 'image' class = 'left-image'>
     </div>
 
 <div class="login-form-section">
     <div class="login-card">
 
-        <a href = '#'><img src = 'https://redefine.co.za/assets/images/logo.svg'></a>
+        <a href = '#'><img src = 'https://redefine.co.za/assets/images/logo.svg' class="brand-logo"></a>
         <h1>Hello and Welcome!</h1>
 
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -21,7 +21,7 @@
                     type="email"
                     id="email"
                     formControlName="email"
-                    placeholder="Enter your email"
+                    placeholder="&#9993; Enter your email"
                 >
 
                 @if (loginForm.controls.email.touched &&
@@ -44,7 +44,7 @@
                     [type] = "showPassword ? 'text' : 'password'"
                     id="password"
                     formControlName="password"
-                    placeholder="Enter your password"
+                    placeholder="&#128274; Enter your password"
                 >
 
                 <button type = 'button' class = 'password-toggle' (click)="showPassword = !showPassword">
@@ -57,7 +57,7 @@
                     <small class="error">Password is required.</small>
                 }
 
-                @if (loginForm.controls.password.touched &&
+                <!-- @if (loginForm.controls.password.touched &&
                     loginForm.controls.password.hasError('pattern')){
                         <small class = "error">
                             Password should contain a capital letter, a small letter, a symbol and a number.<br>
@@ -69,7 +69,7 @@
                     <small class="error">
                         Password must be at least 6 characters.
                     </small>
-                }
+                } -->
             
         </div>
             <!-- Forgot Password -->
@@ -79,10 +79,10 @@
 
         <!--Login Error-->
 
-        @if(loginError)
+        @if(loginMessage)
         {
             <small class = 'error login-error'>
-                {{loginError}}
+                {{loginMessage}}
             </small>
         }
 
@@ -94,7 +94,6 @@
         </form>
 
         <p class="register-link">
-            Don't have an account?
             <a routerLink="/register">Create Account</a>
         </p>
 

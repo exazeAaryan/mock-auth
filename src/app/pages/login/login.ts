@@ -21,46 +21,43 @@ export class Login {
 
   password : new FormControl('' , [
     Validators.required,
-    Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).+$/),
-    Validators.minLength(6)
+    // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).+$/),
+    // Validators.minLength(6)
   ]),
   })
 
   constructor(private auth : Auth , private cdr : ChangeDetectorRef){}
 
-  loginError = '';
+  loginMessage = '';
 
   isLoading = false;
-  onSubmit()
-  {
-    if (this.loginForm.invalid || this.isLoading)
-      {
-        return;
-      }  
-
-      const email = this.loginForm.value.email ?? '';
-      const password = this.loginForm.value.password ?? '';
-
-      this.loginError = '';
-      this.isLoading = true;
-
-      setTimeout( () => {
-        const isAuthenticated = this.auth.login(email , password);
-
-        if(isAuthenticated)
-        {
-          this.loginError = 'Login Successful' 
-        }
-        else
-        {
-          this.loginError = 'Invalid email or password'
-        }
-
-        this.isLoading = false;
-
-        this.cdr.detectChanges();
-      } , 1000)
+  onSubmit() {
+  if (this.loginForm.invalid || this.isLoading) {
+    return;
   }
+
+  const email = this.loginForm.value.email ?? '';
+  const password = this.loginForm.value.password ?? '';
+
+  this.loginMessage = '';
+  this.isLoading = true;
+
+
+  setTimeout(() => {
+    const isAuthenticated = this.auth.login(email, password);
+
+    if (isAuthenticated) {
+      this.loginMessage = 'Login Successful';
+      // console.log('Login successful!');
+    } else {
+      this.loginMessage = 'Invalid email or password.';
+    }
+
+    this.isLoading = false;
+
+    this.cdr.detectChanges();
+  }, 1000);
+}
 
   showPassword = false;
 }
