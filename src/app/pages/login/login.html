@@ -87,8 +87,8 @@
         }
 
             <!-- Submit -->
-            <button type="submit" [disabled]="loginForm.invalid">
-                Login
+            <button type="submit" [disabled]="loginForm.invalid || isLoading">
+                {{isLoading ? 'Logging In' : 'Login'}}
             </button>
 
         </form>

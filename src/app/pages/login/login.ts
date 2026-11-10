@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Validator } from '@angular/forms';
 import { Auth } from '../../services/auth';
+
 @Component({
   imports: [ReactiveFormsModule],
   selector: 'app-login',
@@ -25,33 +26,40 @@ export class Login {
   ]),
   })
 
-  constructor(private auth : Auth){}
+  constructor(private auth : Auth , private cdr : ChangeDetectorRef){}
 
   loginError = '';
+
+  isLoading = false;
   onSubmit()
   {
-    if(this.loginForm.invalid)
-    {
-      return;
-    }
+    if (this.loginForm.invalid || this.isLoading)
+      {
+        return;
+      }  
 
-    const email = this.loginForm.value.email ?? '';
-    const password = this.loginForm.value.password ?? '';
+      const email = this.loginForm.value.email ?? '';
+      const password = this.loginForm.value.password ?? '';
 
-    this.loginError = '';
+      this.loginError = '';
+      this.isLoading = true;
 
-    const isAuthenticated = this.auth.login(email , password);
+      setTimeout( () => {
+        const isAuthenticated = this.auth.login(email , password);
 
-    if(isAuthenticated)
-    {
-      this.loginError = 'Login Successful'
-    }
-    else
-    {
-      this.loginError = 'Invalid email or password'
-    }
-    
-    
+        if(isAuthenticated)
+        {
+          this.loginError = 'Login Successful' 
+        }
+        else
+        {
+          this.loginError = 'Invalid email or password'
+        }
+
+        this.isLoading = false;
+
+        this.cdr.detectChanges();
+      } , 1000)
   }
 
   showPassword = false;
