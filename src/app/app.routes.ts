@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
+import { ForgotPassword } from './pages/forgot-password/forgot-password';
 export const routes: Routes = [
     {
         path : '',
@@ -9,5 +10,9 @@ export const routes: Routes = [
     {
         path : 'login',
         component : Login
+    },
+    {
+        path : 'forgot-password',
+        component : ForgotPassword
     }
 ];

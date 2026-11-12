@@ -4,9 +4,9 @@ import { FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Validator } from '@angular/forms';
 import { Auth } from '../../services/auth';
-
+import { RouterLink } from '@angular/router';
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule , RouterLink],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',
