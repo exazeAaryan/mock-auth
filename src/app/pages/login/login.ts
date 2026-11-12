@@ -31,33 +31,37 @@ export class Login {
   loginMessage = '';
 
   isLoading = false;
-  onSubmit() {
-  if (this.loginForm.invalid || this.isLoading) {
-    return;
-  }
 
-  const email = this.loginForm.value.email ?? '';
-  const password = this.loginForm.value.password ?? '';
-
-  this.loginMessage = '';
-  this.isLoading = true;
-
-
-  setTimeout(() => {
-    const isAuthenticated = this.auth.login(email, password);
-
-    if (isAuthenticated) {
-      this.loginMessage = 'Login Successful';
-      // console.log('Login successful!');
-    } else {
-      this.loginMessage = 'Invalid email or password.';
+  onSubmit() : void {
+    if(this.loginForm.invalid || this.isLoading)
+    {
+      return;
     }
 
-    this.isLoading = false;
+    const email  = this.loginForm.value.email ?? '';
+    const password = this.loginForm.value.password ?? '';
 
-    this.cdr.detectChanges();
-  }, 1000);
-}
+    this.loginMessage = '';
+    this.isLoading = true;
+
+    this.auth.login(email , password).subscribe({
+      next : () => {
+        this.loginMessage = 'Login successful';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+
+      error : (error) =>{
+          const message = error.error?.message ?? error.error?.Message;
+
+          this.loginMessage = typeof message === 'string' ? message : `Login Failed (${error.status}).`;
+
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          
+      }
+    })
+  }
 
   showPassword = false;
 }

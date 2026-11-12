@@ -1,21 +1,31 @@
-import { Injectable } from "@angular/core";
-import { email } from "@angular/forms/signals";
+import { HttpClient , HttpParams } from "@angular/common/http";
+import { inject , Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+
+const baseURL = 'https://retail-portal-api-hjdgbnawb7d8becn.centralindia-01.azurewebsites.net';
+
+const apiToken = 'SBDBDJBDJKSB^*DBDU*898989DKDBDDDKK';
 
 @Injectable({
-    providedIn :'root'
+    providedIn : 'root'
 })
 
-export class Auth {
-    //Mock user
+export class Auth 
+{
+    private readonly http = inject(HttpClient);
 
-    private mockUser = {
-        email : 'admin@example.com',
-        password : 'Admin@123'
-    };
+    login(email : string , password : string) : Observable <unknown>
+    {
+        const body = new FormData();
+        body.append('Email' , email.trim());
+        body.append('Password' , password.trim());
 
-    login(email : string , password : string ) : boolean {
-        return (
-            email.trim().toLowerCase() === this.mockUser.email && password === this.mockUser.password
+        const params = new HttpParams().set('ApiToken' , apiToken);
+
+        return this.http.post(
+            `${baseURL}/api/user/login`,
+            body,
+            {params},
         );
     }
 }
