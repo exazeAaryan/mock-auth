@@ -18,7 +18,7 @@ export class Auth
     {
         const body = new FormData();
         body.append('Email' , email.trim());
-        body.append('Password' , password.trim());
+        body.append('Password' , password);
 
         const params = new HttpParams().set('ApiToken' , apiToken);
 
@@ -28,4 +28,20 @@ export class Auth
             {params},
         );
     }
+
+    forgotPassword(email : string) : Observable <unknown>
+    {
+        const body = new FormData();
+        body.append('Email' , email.trim());
+
+        const params = new HttpParams().set('ApiToken', apiToken);
+        
+        return this.http.post(
+            `${baseURL}/api/user/forgot-password`,
+            body,
+            {params}
+        )
+
+        
+    } 
 }
