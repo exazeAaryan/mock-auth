@@ -45,7 +45,21 @@ export class Login {
     this.isLoading = true;
 
     this.auth.login(email , password).subscribe({
-      next : () => {
+      next : (response: unknown) => {
+        const body = (response ?? {}) as {
+          Token?: unknown;
+          data?: { Token?: unknown } | null;
+        };
+        const token = body.Token ?? body.data?.Token;
+
+        if (typeof token !== 'string' || !token) {
+          this.loginMessage = 'The login response did not contain a token.';
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.auth.setAccessToken(token);
         this.loginMessage = 'Login successful';
         this.isLoading = false;
         this.cdr.detectChanges();
