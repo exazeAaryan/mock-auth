@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 
 const baseURL = 'https://retail-portal-api-hjdgbnawb7d8becn.centralindia-01.azurewebsites.net';
 
-const apiToken = 'SBDBDJBDJKSB^*DBDU*898989DKDBDDDKK';
+const apiToken = 'SBDBDJBDJKSB^*DBDU*797979DKDBDDDKK';
 
 @Injectable({
     providedIn : 'root'
