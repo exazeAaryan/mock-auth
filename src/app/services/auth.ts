@@ -90,7 +90,7 @@ export class Auth
         }
     }
 
-    getUser(pageNumber : number , pageCount : number = 10) : Observable<unknown>
+    getUser(pageNumber : number , pageCount : number = 10 , search = '') : Observable<unknown>
     {
         const token = this.getAccessToken();
         if(!token)
@@ -98,10 +98,14 @@ export class Auth
             return throwError(() => new Error('No Login Token is available'));
         }
 
-        const params = new HttpParams()
+        let params = new HttpParams()
             .set('ApiToken', apiToken)
             .set('PageNo', pageNumber)
             .set('PerPage', pageCount);
+        if(search.trim())
+        {
+            params = params.set('Search' , search.trim())
+        }
         const headers = new HttpHeaders().set('Authorization' , `Bearer ${token}`);
 
         return this.http.get(`${baseURL}/api/user/list`, {

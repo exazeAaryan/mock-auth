@@ -29,7 +29,7 @@
       </a>
       <h1>Users</h1>
     </div>
-    <button class="create-button" type="button">Create New</button>
+    <button class="create-button" type="button">Create User</button>
   </header>
 
   <section class="users-card" aria-labelledby="all-users-heading">
@@ -39,12 +39,18 @@
         <p>Total: {{ totalUsers }}</p>
       </div>
       <div class="list-tools" aria-label="User list tools">
-        <button class="tool-button" type="button" aria-label="Search users" title="Search users">
+        <button class="tool-button" type="button" aria-label="Search users" title="Search users" (click)="toggleSearch()">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="10.8" cy="10.8" r="6.6" />
             <path d="m16 16 4.3 4.3" />
           </svg>
         </button>
+        <!-- @if (isSearchOpen) { -->
+          <input class = 'search-input' #searchInput type = 'search' 
+          placeholder = 'Search Users' [value]="searchText" (input)="onSearchInput($any($event.target).value)" 
+          [class.search-open] = "isSearchOpen" [disabled]="!isSearchOpen" [attr.aria-hidden]="!isSearchOpen"
+          [tabIndex]="isSearchOpen ? 0 : -1">
+        <!-- } -->
         <button class="tool-button" type="button" aria-label="Filter users" title="Filter users">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M3.5 5h17l-6.7 7.6v5.7l-3.6 1.8v-7.5z" />
@@ -68,17 +74,17 @@
       <table mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="FirstName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
-          <td mat-cell *matCellDef="let user">{{ user.FirstName }}</td>
+          <td mat-cell *matCellDef="let user"><span [innerHTML]="highlight(user.FirstName)"></span></td>
         </ng-container>
 
         <ng-container matColumnDef="LastName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
-          <td mat-cell *matCellDef="let user">{{ user.LastName }}</td>
+          <td mat-cell *matCellDef="let user"><span [innerHTML]="highlight(user.LastName)"></span></td>
         </ng-container>
 
         <ng-container matColumnDef="Email">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-          <td mat-cell *matCellDef="let user">{{ user.Email }}</td>
+          <td mat-cell *matCellDef="let user"><span [innerHTML]="highlight(user.Email)"></span></td>
         </ng-container>
 
         <ng-container matColumnDef="RoleName">

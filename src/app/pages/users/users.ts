@@ -4,7 +4,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth';
-
+import { ElementRef } from '@angular/core';
 interface UserRow {
   FirstName: string;
   LastName: string;
@@ -74,7 +74,7 @@ export class Users implements OnInit, AfterViewInit {
     this.isLoading = true;
     this.loadError = '';
 
-    this.auth.getUser(this.pageIndex + 1, this.pageSize).subscribe({
+    this.auth.getUser(this.pageIndex + 1 , this.pageSize , this.searchText).subscribe({
       next: (response: unknown) => {
         const result = response as {
           data?: {
@@ -107,5 +107,58 @@ export class Users implements OnInit, AfterViewInit {
   logout(): void {
     this.auth.clearAccessToken();
     void this.router.navigateByUrl('/login');
+  }
+
+  isSearchOpen = false;
+
+  @ViewChild('searchInput') searchInput ?: ElementRef<HTMLInputElement>;
+
+  toggleSearch() : void {
+    this.isSearchOpen = !this.isSearchOpen;
+
+    if(this.isSearchOpen)
+    {
+      setTimeout(() => {
+        this.searchInput?.nativeElement.focus();
+      })
+    }
+  }
+
+  searchText = '';
+
+  searchUsers() : void
+  {
+    console.log('Searching'  , this.searchText);
+    
+    this.pageIndex = 0;
+    this.loadUsers();
+  }
+
+  private searchTimer ?: ReturnType<typeof setTimeout>;
+
+  onSearchInput(value : string) : void 
+  {
+    this.searchText = value;
+    clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => 
+      this.searchUsers() , 300)
+  }
+
+  highlight(value: string | null | undefined) : string
+  {
+    const text = value ?? '';
+    const term = this.searchText.trim();
+
+    if(!term)
+    {
+      return text;
+    }
+
+    const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    return text.replace(
+    new RegExp(`(${escapedTerm})`, 'gi'),
+    '<mark>$1</mark>'
+  );
   }
 }
