@@ -1,5 +1,6 @@
 import { HttpClient , HttpParams , HttpHeaders} from "@angular/common/http";
-import { inject , Injectable } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { inject , Injectable , PLATFORM_ID} from "@angular/core";
 import { Observable , throwError} from "rxjs";
 
 const baseURL = 'https://retail-portal-api-hjdgbnawb7d8becn.centralindia-01.azurewebsites.net';
@@ -13,17 +14,51 @@ const apiToken = 'SBDBDJBDJKSB^*DBDU*797979DKDBDDDKK';
 export class Auth 
 {
     private readonly http = inject(HttpClient);
-    private accessToken: string | null = null;
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly tokenStorageKey = 'redefine_access_token';
+    private accessToken: string | null = this.readStoredAccessToken();
 
     setAccessToken(token: string): void {
         this.accessToken = token;
+
+        if (isPlatformBrowser(this.platformId)) {
+            try {
+                localStorage.setItem(this.tokenStorageKey, token);
+            } catch {
+                // Keep the token in memory if browser storage is unavailable.
+            }
+        }
     }
 
     getAccessToken(): string | null {
         return this.accessToken;
     }
 
-    getUser() : Observable<unknown>
+    clearAccessToken(): void {
+        this.accessToken = null;
+
+        if (isPlatformBrowser(this.platformId)) {
+            try {
+                localStorage.removeItem(this.tokenStorageKey);
+            } catch {
+                // The in-memory token is still cleared if browser storage is unavailable.
+            }
+        }
+    }
+
+    private readStoredAccessToken(): string | null {
+        if (!isPlatformBrowser(this.platformId)) {
+            return null;
+        }
+
+        try {
+            return localStorage.getItem(this.tokenStorageKey);
+        } catch {
+            return null;
+        }
+    }
+
+    getUser(pageNumber : number , pageCount : number = 10) : Observable<unknown>
     {
         const token = this.getAccessToken();
         if(!token)
@@ -31,7 +66,7 @@ export class Auth
             return throwError(() => new Error('No Login Token is available'));
         }
 
-        const params = new HttpParams().set('ApiToken' , apiToken);
+        const params = new HttpParams().set('ApiToken' , apiToken).set('pageNumber', pageNumber).set('pageCount' , pageCount)
         const headers = new HttpHeaders().set('Authorization' , `Bearer ${token}`);
 
         return this.http.get(`${baseURL}/api/user/list`, {

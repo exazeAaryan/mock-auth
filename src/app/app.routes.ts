@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
+import { Users } from './pages/users/users';
 export const routes: Routes = [
     {
         path : '',
@@ -14,5 +15,9 @@ export const routes: Routes = [
     {
         path : 'forgot-password',
         component : ForgotPassword
+    },
+    {
+        path : 'users',
+        component : Users
     }
 ];

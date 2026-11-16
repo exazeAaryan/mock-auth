@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Validator } from '@angular/forms';
 import { Auth } from '../../services/auth';
-import { RouterLink } from '@angular/router';
+import { RouterLink , Router } from '@angular/router';
 @Component({
   imports: [ReactiveFormsModule , RouterLink],
   selector: 'app-login',
@@ -26,7 +26,7 @@ export class Login {
   ]),
   })
 
-  constructor(private auth : Auth , private cdr : ChangeDetectorRef){}
+  constructor(private auth : Auth , private cdr : ChangeDetectorRef , private router : Router,){}
 
   loginMessage = '';
 
@@ -60,6 +60,7 @@ export class Login {
         }
 
         this.auth.setAccessToken(token);
+        void this.router.navigateByUrl('/users')
         this.loginMessage = 'Login successful';
         this.isLoading = false;
         this.cdr.detectChanges();

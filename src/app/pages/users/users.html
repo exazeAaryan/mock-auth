@@ -1,1 +1,126 @@
-<p>users works!</p>
+<header class="topbar">
+  <a class="brand-link" routerLink="/login" aria-label="Go to login">
+    <img
+      class="brand-logo"
+      src="https://redefine.co.za/assets/images/logo.svg"
+      alt="Redefine Properties">
+  </a>
+</header>
+
+<main class="users-page">
+  <header class="page-heading">
+    <div class="page-title-group">
+      <a class="back-button" routerLink="/login">
+        <span aria-hidden="true">←</span>
+        <span>BACK</span>
+      </a>
+      <h1>Users</h1>
+    </div>
+    <button class="create-button" type="button">Create New</button>
+  </header>
+
+  <section class="users-card" aria-labelledby="all-users-heading">
+    <div class="card-heading">
+      <div>
+        <h2 id="all-users-heading">All Users</h2>
+        <p>Total: {{ totalUsers }}</p>
+      </div>
+      <div class="list-tools" aria-label="User list tools">
+        <button class="tool-button" type="button" aria-label="Search users" title="Search users">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.8" cy="10.8" r="6.6" />
+            <path d="m16 16 4.3 4.3" />
+          </svg>
+        </button>
+        <button class="tool-button" type="button" aria-label="Filter users" title="Filter users">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3.5 5h17l-6.7 7.6v5.7l-3.6 1.8v-7.5z" />
+          </svg>
+        </button>
+        <button class="tool-button" type="button" aria-label="Choose columns" title="Choose columns">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3.5" y="4" width="17" height="16" rx="1.5" />
+            <path d="M12 4v16" />
+          </svg>
+        </button>
+        <button class="tool-button" type="button" aria-label="Download users" title="Download users">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 16v4h16v-4" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="FirstName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
+          <td mat-cell *matCellDef="let user">{{ user.FirstName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="LastName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
+          <td mat-cell *matCellDef="let user">{{ user.LastName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="Email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+          <td mat-cell *matCellDef="let user">{{ user.Email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="RoleName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Role Name</th>
+          <td mat-cell *matCellDef="let user">{{ user.RoleName ?? '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="Status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let user">
+            <span class="status-pill" [class.active]="user.Status === 'Active'">
+              {{ user.Status ?? '—' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="LastLogin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Login</th>
+          <td mat-cell *matCellDef="let user">{{ user.LastLogin ?? '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let user">
+            <button type="button" class="actions-button" [attr.aria-label]="'Actions for ' + user.Email">
+              ⋮
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-row *matNoDataRow>
+          <td class="empty-cell" [attr.colspan]="displayedColumns.length">
+            @if (isLoading) {
+              Loading users…
+            } @else if (loadError) {
+              {{ loadError }}
+            } @else {
+              No users found.
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalUsers"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 20, 50]"
+      [showFirstLastButtons]="true"
+      [disabled]="isLoading"
+      (page)="onPageChange($event)"
+      aria-label="Users pagination">
+    </mat-paginator>
+  </section>
+</main>
