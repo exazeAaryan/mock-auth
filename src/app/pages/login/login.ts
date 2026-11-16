@@ -5,6 +5,51 @@ import { FormControl } from '@angular/forms';
 import { Validator } from '@angular/forms';
 import { Auth } from '../../services/auth';
 import { RouterLink , Router } from '@angular/router';
+
+function resolveAccountName(response: unknown, token: string, fallback: string): string {
+  const root = (response && typeof response === 'object' ? response : {}) as Record<string, unknown>;
+  const data = (root['data'] && typeof root['data'] === 'object' ? root['data'] : {}) as Record<string, unknown>;
+  const user = (data['user'] && typeof data['user'] === 'object' ? data['user'] : {}) as Record<string, unknown>;
+  const records = [root, data, user];
+  const nameKeys = ['DisplayName', 'displayName', 'UserName', 'Username', 'userName', 'username', 'Name', 'name'];
+
+  for (const record of records) {
+    for (const key of nameKeys) {
+      const value = record[key];
+      if (typeof value === 'string' && value.trim()) {
+        return value.trim();
+      }
+    }
+
+    const firstName = record['FirstName'] ?? record['firstName'] ?? record['given_name'];
+    const lastName = record['LastName'] ?? record['lastName'] ?? record['family_name'];
+    if (typeof firstName === 'string' && typeof lastName === 'string') {
+      const fullName = `${firstName} ${lastName}`.trim();
+      if (fullName) return fullName;
+    }
+  }
+
+  try {
+    const encodedPayload = token.split('.')[1];
+    if (encodedPayload) {
+      const base64 = encodedPayload.replace(/-/g, '+').replace(/_/g, '/');
+      const binary = atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '='));
+      const payloadText = decodeURIComponent(
+        Array.from(binary, (character) => `%${character.charCodeAt(0).toString(16).padStart(2, '0')}`).join(''),
+      );
+      const claims = JSON.parse(payloadText) as Record<string, unknown>;
+      const claimName = claims['name'] ?? claims['preferred_username'] ?? claims['unique_name'] ?? claims['email'];
+      if (typeof claimName === 'string' && claimName.trim()) {
+        return claimName.trim();
+      }
+    }
+  } catch {
+    // The API token may not be a JWT with readable profile claims.
+  }
+
+  return fallback;
+}
+
 @Component({
   imports: [ReactiveFormsModule , RouterLink],
   selector: 'app-login',
@@ -60,6 +105,7 @@ export class Login {
         }
 
         this.auth.setAccessToken(token);
+        this.auth.setAccountName(resolveAccountName(response, token, email.trim()));
         void this.router.navigateByUrl('/users')
         this.loginMessage = 'Login successful';
         this.isLoading = false;

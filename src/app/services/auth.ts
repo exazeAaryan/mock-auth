@@ -16,7 +16,9 @@ export class Auth
     private readonly http = inject(HttpClient);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly tokenStorageKey = 'redefine_access_token';
+    private readonly accountNameStorageKey = 'redefine_account_name';
     private accessToken: string | null = this.readStoredAccessToken();
+    private accountName: string | null = this.readStoredAccountName();
 
     setAccessToken(token: string): void {
         this.accessToken = token;
@@ -34,12 +36,30 @@ export class Auth
         return this.accessToken;
     }
 
+    setAccountName(accountName: string): void {
+        this.accountName = accountName;
+
+        if (isPlatformBrowser(this.platformId)) {
+            try {
+                localStorage.setItem(this.accountNameStorageKey, accountName);
+            } catch {
+                // Keep the account name in memory if browser storage is unavailable.
+            }
+        }
+    }
+
+    getAccountName(): string | null {
+        return this.accountName;
+    }
+
     clearAccessToken(): void {
         this.accessToken = null;
+        this.accountName = null;
 
         if (isPlatformBrowser(this.platformId)) {
             try {
                 localStorage.removeItem(this.tokenStorageKey);
+                localStorage.removeItem(this.accountNameStorageKey);
             } catch {
                 // The in-memory token is still cleared if browser storage is unavailable.
             }
@@ -53,6 +73,18 @@ export class Auth
 
         try {
             return localStorage.getItem(this.tokenStorageKey);
+        } catch {
+            return null;
+        }
+    }
+
+    private readStoredAccountName(): string | null {
+        if (!isPlatformBrowser(this.platformId)) {
+            return null;
+        }
+
+        try {
+            return localStorage.getItem(this.accountNameStorageKey);
         } catch {
             return null;
         }

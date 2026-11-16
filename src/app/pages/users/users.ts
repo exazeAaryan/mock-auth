@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth';
 
 interface UserRow {
@@ -37,6 +37,7 @@ function createUsersPaginatorIntl(): MatPaginatorIntl {
   templateUrl: './users.html',
 })
 export class Users implements OnInit, AfterViewInit {
+  accountName = 'Account';
   readonly displayedColumns = [
     'FirstName',
     'LastName',
@@ -48,6 +49,7 @@ export class Users implements OnInit, AfterViewInit {
   ];
 
   readonly dataSource = new MatTableDataSource<UserRow>([]);
+  readonly pageSizeOptions = [10, 25, 50, 100];
   @ViewChild(MatSort) sort!: MatSort;
 
   totalUsers = 0;
@@ -56,7 +58,9 @@ export class Users implements OnInit, AfterViewInit {
   isLoading = false;
   loadError = '';
 
-  constructor(private readonly auth: Auth) {}
+  constructor(private readonly auth: Auth, private readonly router: Router) {
+    this.accountName = auth.getAccountName() ?? 'Account';
+  }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -76,6 +80,7 @@ export class Users implements OnInit, AfterViewInit {
           data?: {
             users?: UserRow[];
             totalUsers?: number;
+            pageNumber?: number;
           };
         };
 
@@ -83,12 +88,14 @@ export class Users implements OnInit, AfterViewInit {
           ? result.data.users
           : [];
         this.totalUsers = result.data?.totalUsers ?? 0;
+        if (typeof result.data?.pageNumber === 'number') {
+          this.pageIndex = Math.max(0, result.data.pageNumber - 1);
+        }
         this.isLoading = false;
       },
       error: (error) => {
         console.error('User list request failed:', error);
         this.dataSource.data = [];
-        this.totalUsers = 0;
         this.loadError = error.error?.message ?? 'Unable to load users. Please try again.';
         this.isLoading = false;
       },
@@ -99,5 +106,10 @@ export class Users implements OnInit, AfterViewInit {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadUsers();
+  }
+
+  logout(): void {
+    this.auth.clearAccessToken();
+    void this.router.navigateByUrl('/login');
   }
 }

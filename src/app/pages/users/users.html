@@ -5,6 +5,19 @@
       src="https://redefine.co.za/assets/images/logo.svg"
       alt="Redefine Properties">
   </a>
+  <div class="account-menu">
+    <button class="account-trigger" type="button" aria-haspopup="true">
+      <span>{{ accountName }}</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m7 10 5 5 5-5" />
+      </svg>
+    </button>
+    <nav class="account-dropdown" aria-label="Account options">
+      <button type="button" role="menuitem">Profile</button>
+      <button type="button" role="menuitem">Change Password</button>
+      <button type="button" role="menuitem" (click)="logout()">Logout</button>
+    </nav>
+  </div>
 </header>
 
 <main class="users-page">
@@ -113,10 +126,11 @@
     </div>
 
     <mat-paginator
+      class="users-paginator"
       [length]="totalUsers"
       [pageIndex]="pageIndex"
       [pageSize]="pageSize"
-      [pageSizeOptions]="[10, 20, 50]"
+      [pageSizeOptions]="pageSizeOptions"
       [showFirstLastButtons]="true"
       [disabled]="isLoading"
       (page)="onPageChange($event)"
