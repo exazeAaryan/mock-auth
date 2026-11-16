@@ -98,7 +98,10 @@ export class Auth
             return throwError(() => new Error('No Login Token is available'));
         }
 
-        const params = new HttpParams().set('ApiToken' , apiToken).set('pageNumber', pageNumber).set('pageCount' , pageCount)
+        const params = new HttpParams()
+            .set('ApiToken', apiToken)
+            .set('PageNo', pageNumber)
+            .set('PerPage', pageCount);
         const headers = new HttpHeaders().set('Authorization' , `Bearer ${token}`);
 
         return this.http.get(`${baseURL}/api/user/list`, {

@@ -80,7 +80,6 @@ export class Users implements OnInit, AfterViewInit {
           data?: {
             users?: UserRow[];
             totalUsers?: number;
-            pageNumber?: number;
           };
         };
 
@@ -88,9 +87,6 @@ export class Users implements OnInit, AfterViewInit {
           ? result.data.users
           : [];
         this.totalUsers = result.data?.totalUsers ?? 0;
-        if (typeof result.data?.pageNumber === 'number') {
-          this.pageIndex = Math.max(0, result.data.pageNumber - 1);
-        }
         this.isLoading = false;
       },
       error: (error) => {
