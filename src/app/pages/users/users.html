@@ -109,8 +109,8 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class = 'user-header-row'></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class = 'user-row'></tr>
         <tr mat-row *matNoDataRow>
           <td class="empty-cell" [attr.colspan]="displayedColumns.length">
             @if (isLoading) {
