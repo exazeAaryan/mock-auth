@@ -140,7 +140,29 @@ export class Auth
             body,
             {params}
         )
-
-        
     } 
+
+    changePassword(currentPassword : string , newPassword : string , confirmNewPassword : string) : Observable<unknown>
+    {
+        const token = this.getAccessToken();
+        
+        if(!token)
+        {
+            return throwError (() => new Error('No Login Token available.'))
+        }
+
+        const body = new FormData();
+        body.append('CurrentPassword' , currentPassword);
+        body.append('NewPassword' , newPassword);
+        body.append('ConfirmNewPassword' , confirmNewPassword);
+
+        const params = new HttpParams().set('ApiToken' , apiToken);
+        const headers = new HttpHeaders().set('Authorization' , `Bearer ${token}`);
+
+        return this.http.post(
+            `${baseURL}/api/user/change-password`,
+            body,
+            {params , headers}
+        )
+    }
 }

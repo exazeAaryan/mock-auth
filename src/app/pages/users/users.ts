@@ -161,4 +161,15 @@ export class Users implements OnInit, AfterViewInit {
     '<mark>$1</mark>'
   );
   }
+
+  isChangePassword = false;
+
+  openChangePassword() : void 
+  {
+    this.isChangePassword = true;
+  }
+  closeChangePassword() : void 
+  {
+    this.isChangePassword = false;
+  }
 }
