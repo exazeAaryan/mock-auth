@@ -1,0 +1,78 @@
+<header class = 'topbar'>
+    <a class="brand-link" routerLink="/users" aria-label="Go to Login">
+        <img class = 'brand-logo' src = 'https://redefine.co.za/assets/images/logo.svg' alt=  'Redefine Properties'>
+    </a>
+    <div class="account-menu">
+  <button class="account-trigger" type="button" aria-haspopup="true">
+    <span>{{ accountName }}</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m7 10 5 5 5-5" />
+    </svg>
+  </button>
+
+  <nav class="account-dropdown" aria-label="Account options">
+    <button type="button" role="menuitem">Profile</button>
+    <button type="button" role="menuitem" routerLink="/change-password">
+      Change Password
+    </button>
+    <button type="button" role="menuitem" (click)="logout()">Logout</button>
+  </nav>
+</div>
+</header>
+
+<main class = 'create-user-page'>
+    <header class = 'page-heading'>
+        <a class = 'back-button' routerLink = '/users'>
+            <span aria-hidden = 'true'>←</span>
+            <span>BACK</span>
+        </a>
+        <h1>Create User</h1>
+    </header>
+
+    <form class="create-user-card" [formGroup]="createUsers" (ngSubmit)="onSubmit()">
+        <div class = 'form-grid'>
+            <label>
+                <span>First Name <b>*</b></span>
+                <input type ='text' placeholder="Enter First Name" formControlName="firstName">
+            </label>
+
+            <label>
+                <span>Last Name <b>*</b></span>
+                <input type = 'text' placeholder="Enter Last Name" formControlName = "lastName">
+            </label>
+
+            <label>
+                <span>Email <b>*</b></span>
+                <input type = 'email' placeholder="Enter Email Address" formControlName="email"> 
+            </label>
+
+            <label>
+                <span>Cell Number</span>
+                <input type = 'tel' placeholder="Enter Cell Number" formControlName="cellNumber">
+            </label>
+            <label>
+                <span>Roles<b>*</b></span>
+                <select formControlName="roleId">
+                    <option value = ''>Selection Role</option>
+                    @for(role of roles; track role.Id)
+                    {
+                        <option [value] = "role.Id">{{role.Name}}</option>
+                    }
+                </select>
+            </label>
+        </div>
+        @if(successMessage)
+        {
+            <p class = 'success-message' role = 'status'>{{successMessage}}</p>
+        }
+
+        @if(errorMessage)
+        {
+            <p class = 'error-message' role = 'alert'>{{errorMessage}}</p>
+        }
+        <div class="form-actions">
+            <button class = 'cancel' type = 'button' routerLink="/users">Cancel</button>
+            <button class = 'create-button' type = 'submit' [disabled]="createUsers.invalid || isSubmitting">{{isSubmitting ? 'Creating...' : 'Create User'}}</button>
+        </div>
+    </form>
+</main>

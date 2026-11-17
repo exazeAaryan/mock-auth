@@ -3,6 +3,7 @@ import { Login } from './pages/login/login';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { Users } from './pages/users/users';
 import { ChangePassword } from './pages/change-password/change-password';
+import { CreateUser } from './pages/create-user/create-user';
 export const routes: Routes = [
     {
         path : '',
@@ -24,5 +25,9 @@ export const routes: Routes = [
     {
         path : 'change-password',
         component : ChangePassword
+    },
+    {
+        path : 'create-user',
+        component : CreateUser
     }
 ];

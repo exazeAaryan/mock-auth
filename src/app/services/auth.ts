@@ -113,6 +113,25 @@ export class Auth
             headers,
         });
     }
+    getRoles() : Observable<unknown>
+    {
+        const token = this.getAccessToken();
+
+        if(!token)
+        {
+            return throwError ( () => new Error ("No Login Token available"))
+        }
+
+        const params = new HttpParams().set('ApiToken', apiToken);
+        const headers = new HttpHeaders().set('Authorization' , `Bearer ${token}`)
+
+        return this.http.get(`${baseURL}/api/role/list` , {
+            params,
+            headers
+        })
+        console.log();
+        
+    }
     login(email : string , password : string) : Observable <unknown>
     {
         const body = new FormData();
@@ -163,6 +182,34 @@ export class Auth
             `${baseURL}/api/user/change-password`,
             body,
             {params , headers}
+        )
+    }
+
+    createUser(firstName : string , lastName : string , email : string , cellNumber  : string , roleId : number) : Observable <unknown>
+    {
+        const token = this.getAccessToken();
+
+        if(!token)
+        {
+            return throwError (()=> new Error('No Login Token is available'))
+        }
+
+        const params = new HttpParams().set('ApiToken' , apiToken);
+        const headers = new HttpHeaders().set('Authorization' , `Bearer ${token}`);
+
+        const body = {
+            FirstName : firstName.trim(),
+            LastName : lastName.trim(),
+            Email : email.trim(),
+            CellNumber : cellNumber.trim(),
+            RoleId : roleId
+        };
+
+        return this.http.post(`${baseURL}/api/user/register`,
+            body,
+            {
+                params , headers
+            }
         )
     }
 }
