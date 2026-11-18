@@ -106,21 +106,28 @@ export class Login {
 
         this.auth.setAccessToken(token);
         this.auth.setAccountName(resolveAccountName(response, token, email.trim()));
-        // void this.router.navigateByUrl('/users')
-
         const returnUrl = this.router.parseUrl(this.router.url).queryParams['returnUrl'];
-
-const destination =
-  typeof returnUrl === 'string' &&
-  returnUrl.startsWith('/') &&
-  !returnUrl.startsWith('//')
-    ? returnUrl
-    : '/users';
-
-void this.router.navigateByUrl(destination);
-        this.loginMessage = 'Login successful';
         this.isLoading = false;
-        this.cdr.detectChanges();
+
+        const requestedPath =
+          typeof returnUrl === 'string' ? returnUrl.split(/[?#]/, 1)[0] : '';
+        const supportedPaths = ['/users', '/change-password', '/create-user'];
+        const canonicalPath = requestedPath === '/user' ? '/users' : requestedPath;
+        const destination = supportedPaths.includes(canonicalPath)
+          ? `${canonicalPath}${typeof returnUrl === 'string' ? returnUrl.slice(requestedPath.length) : ''}`
+          : '/users';
+
+        void this.router.navigateByUrl(destination).then((navigated) => {
+          if (!navigated) {
+            console.error(`Navigation after login was cancelled: ${destination}`);
+            this.loginMessage = 'Login succeeded, but navigation was cancelled.';
+            this.cdr.detectChanges();
+          }
+        }).catch((navigationError: unknown) => {
+          console.error('Navigation after login failed:', navigationError);
+          this.loginMessage = 'Login succeeded, but the page could not be opened.';
+          this.cdr.detectChanges();
+        });
       },
 
       error : (error) =>{
