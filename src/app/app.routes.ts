@@ -4,6 +4,7 @@ import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { Users } from './pages/users/users';
 import { ChangePassword } from './pages/change-password/change-password';
 import { CreateUser } from './pages/create-user/create-user';
+import { authGuard } from './guards/auth-guard';
 export const routes: Routes = [
     {
         path : '',
@@ -20,14 +21,17 @@ export const routes: Routes = [
     },
     {
         path : 'users',
-        component : Users
+        component : Users,
+        canActivate : [authGuard]
     },
     {
         path : 'change-password',
-        component : ChangePassword
+        component : ChangePassword,
+        canActivate : [authGuard]
     },
     {
         path : 'create-user',
-        component : CreateUser
+        component : CreateUser,
+        canActivate : [authGuard]
     }
 ];

@@ -106,7 +106,18 @@ export class Login {
 
         this.auth.setAccessToken(token);
         this.auth.setAccountName(resolveAccountName(response, token, email.trim()));
-        void this.router.navigateByUrl('/users')
+        // void this.router.navigateByUrl('/users')
+
+        const returnUrl = this.router.parseUrl(this.router.url).queryParams['returnUrl'];
+
+const destination =
+  typeof returnUrl === 'string' &&
+  returnUrl.startsWith('/') &&
+  !returnUrl.startsWith('//')
+    ? returnUrl
+    : '/users';
+
+void this.router.navigateByUrl(destination);
         this.loginMessage = 'Login successful';
         this.isLoading = false;
         this.cdr.detectChanges();
